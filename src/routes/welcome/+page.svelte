@@ -1,5 +1,10 @@
 <script lang="ts">
 	import { IonPage } from "ionic-svelte"
+    import { currentUser } from "$services/pocketbase.auth.service";
+    console.log('*** currentUser', $currentUser);
+    setTimeout(() => {
+        console.log('*** currentUser', $currentUser);
+    }, 2000);
 </script>
 <IonPage>
     <ion-header>

@@ -9,13 +9,6 @@
 	import { loadingBox } from '$services/loadingMessage';
 	export let providers: Provider[] = [];
 	export let onSignIn: Function = () => {};
-	//   const defineComponent = (tagName: string, customElement: any) => {
-	//     if (typeof customElements === "undefined") return;
-
-	//     if (!customElements.get(tagName)) {
-	//         customElements.define(tagName, customElement);
-	//     }
-	// };
 
 	import {
 		mailOutline,
