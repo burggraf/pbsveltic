@@ -1,7 +1,8 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { decrypt_item } from '$services/utils.service';
-import type { Database } from '../models/schema';
-export const supabase: SupabaseClient<Database> = createClient(decrypt_item(0), decrypt_item(1));
+
+const VITE_SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const VITE_SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY
+export const supabase: SupabaseClient = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_KEY);
 
 // export const add_item_to_list = async (name: string, type: string, item: any) => {
 //     let id: string = '';
