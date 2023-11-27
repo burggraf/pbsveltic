@@ -1,6 +1,7 @@
 import { pb } from '$services/pocketbase.service';
-import { supabase } from '$services/supabase.service';
 import { currentUser } from '$services/supabase.auth.service';
+import { supabase } from '$services/supabase.service';
+
 export const signUpWithEmail = async (email: string, password: string) => {
 
   try {
@@ -9,10 +10,26 @@ export const signUpWithEmail = async (email: string, password: string) => {
       password,
       passwordConfirm: password,
     });
+    console.log('******************************************************')
+    console.log('******* create user returned this', user);
+    console.log('******************************************************')
+    currentUser.set(user);
+    if (pb.authStore.model) console.log('pb.authStore.model',pb.authStore.model);
+    else console.log('pb.authStore.model', 'null');
+
 
     try {
-      await pb.collection("users").requestVerification(email);
+      const result = await pb.collection("users").requestVerification(email);
+      console.log('******* requestVerification', result);
       // message = "Check your email for the login link";
+
+      // try logging in...
+      const { user, error } = await signInWithEmail(email, password);
+      console.log('******************************************************')
+      console.log('******* signInWithEmail returned this', user, error);
+      console.log('******************************************************')
+
+      return { user, error: null};
     } catch (error) {
       console.error(error);
       return { user, error};

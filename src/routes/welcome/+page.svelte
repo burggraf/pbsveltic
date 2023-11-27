@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { IonPage } from "ionic-svelte"
     import { currentUser } from "$services/pocketbase.auth.service";
-    console.log('*** currentUser', $currentUser);
+    if ($currentUser) {
+        console.log('*** currentUser', $currentUser);
+    } else {
+        console.log('*** not logged in')
+    }
     setTimeout(() => {
         console.log('*** currentUser', $currentUser);
     }, 2000);

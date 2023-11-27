@@ -14,6 +14,11 @@ export const loadUser = async () => {
   if (pb.authStore.model) {
     currentUser.set(pb.authStore.model);
   }
+  pb.collection('users').authRefresh()
+  const user = await pb.collection('users').authRefresh();
+  if (user?.record) {
+    currentUser.set(user.record);
+  }
 };
 loadUser();
 
