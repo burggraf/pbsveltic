@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { IonPage } from "ionic-svelte"
+	import IonPage from "$ionpage";
 
 
 </script>

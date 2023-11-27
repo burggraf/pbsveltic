@@ -1,5 +1,5 @@
 import { pb } from '$services/pocketbase.service';
-import { currentUser } from '$services/supabase.auth.service';
+import { currentUser } from '$services/pocketbase.auth.service';
 import { supabase } from '$services/supabase.service';
 
 export const signUpWithEmail = async (email: string, password: string) => {
@@ -61,6 +61,10 @@ export const signUpWithEmail = async (email: string, password: string) => {
       const authData = await pb.collection('users').authWithPassword(email, password);
 
       // after the above you can also access the auth data from the authStore
+      console.log('**********************************************')
+      console.log('******* menu: pb.authStore', pb.authStore);
+      console.log('**********************************************')
+
       console.log('pb.authStore.isValid', pb.authStore.isValid);
       console.log('pb.authStore.token',pb.authStore.token);
       if (pb.authStore.model) console.log('pb.authStore.model',pb.authStore.model);

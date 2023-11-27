@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { IonPage } from "ionic-svelte"
-	import { goto } from '$app/navigation';
-	import { currentUser } from '$services/supabase.auth.service';
+	//import IonPage from "../lib/ionic/svelte/components/IonPage.svelte"; //"$ionpage"
+	import IonPage from "$ionpage";
+    import { goto } from '$app/navigation';
+	import { currentUser } from '$services/pocketbase.auth.service';
 	import * as allIonicIcons from 'ionicons/icons';
     import { pushPathStack, popPathStack } from '$services/navigation.service';
     pushPathStack();

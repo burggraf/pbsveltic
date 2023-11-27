@@ -3,7 +3,7 @@
   	import LoginNewPasswordModal from './LoginNewPasswordModal.svelte'
 	import { modalController } from '$ionic/svelte'
 	import { onMount } from 'svelte'
-	import { currentUser } from '$services/supabase.auth.service'
+	import { currentUser } from '$services/pocketbase.auth.service'
 	import { signOut } from './Login';
 	import type { Provider } from '@supabase/supabase-js'
 	export let profileFunction: Function = () => {}

@@ -1,8 +1,15 @@
 <script lang="ts">
+	console.log('****************************')
+	console.log('****************************')
+	console.log('****************************')
+	console.log('*** Menu.svelte')
+	console.log('****************************')
+	console.log('****************************')
+	console.log('****************************')
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	// import { page } from '$app/stores'
-	import { currentUser } from '$services/supabase.auth.service'
+	import { currentUser } from '$services/pocketbase.auth.service'
 	import Login from '$components/Login.svelte'
 
 	import AccordionMenu from './AccordionMenu.svelte'
@@ -35,6 +42,7 @@
 	onMount(() => {
 		// this is unfortunately needed in order to have the menuController API function properly
 		// without this, clicking on the icon at the top left does not close the menu
+		console.log('** menu onMount')
 		registerMenu('mainmenu')
 	})
 
@@ -175,7 +183,7 @@
 						window.location.href = '/'
 					}}
 					onSignIn={() => {
-						goto('/dashboardwelcome');
+						// goto('/dashboardwelcome');
 					}}
 					profileFunction={() => {
 						//console.log('do some profileFunction here')

@@ -1,8 +1,10 @@
 <script lang="ts">
-    import { IonPage } from "ionic-svelte"
-
+	import IonPage from "$ionpage";
+    const ionViewWillEnter = async () => {
+        console.log("ionViewWillEnter")
+    }
 </script>
-<IonPage>
+<IonPage {ionViewWillEnter}>
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">

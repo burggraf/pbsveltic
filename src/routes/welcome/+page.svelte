@@ -1,15 +1,6 @@
 <script lang="ts">
-	import { IonPage } from "ionic-svelte"
-    import { currentUser } from "$services/pocketbase.auth.service";
-    if ($currentUser) {
-        console.log('*** currentUser', $currentUser);
-    } else {
-        console.log('*** not logged in')
-    }
-    setTimeout(() => {
-        console.log('*** currentUser', $currentUser);
-    }, 2000);
-</script>
+	import IonPage from "$ionpage";
+  </script>
 <IonPage>
     <ion-header>
         <ion-toolbar>
@@ -21,7 +12,7 @@
     </ion-header>
     <ion-content class="ion-padding">
         <h1>
-            Welcome!
+            Welcome! 
         </h1>
     </ion-content>
 </IonPage>

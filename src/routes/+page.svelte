@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { IonPage } from "ionic-svelte"
+	import IonPage from "$ionpage";
 
-	import { currentUser } from '$services/supabase.auth.service';
+	import { currentUser } from '$services/pocketbase.auth.service';
 	import { goto } from '$app/navigation';
 	import * as allIonicIcons from 'ionicons/icons';
 	import LoginModal from '$components/LoginModal.svelte';
@@ -57,6 +57,8 @@
 				Starting Page
 			</span>
 			<h3>Start here...</h3>
+			<a on:click={()=>{goto('/welcome')}}>Goto Welcome</a>
+
 			<br/><br/>
 			<span>
 				Lorem, ipsum dolor sit amet consectetur adipisicing elit. Distinctio ullam aperiam rerum ratione nam harum, sit earum! Suscipit est, dolorem soluta incidunt deleniti odit ipsam aspernatur quas vitae hic. Blanditiis!

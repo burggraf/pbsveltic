@@ -1,5 +1,5 @@
 <script lang="ts">	
-    import { IonPage } from "ionic-svelte"
+    import IonPage from "$ionpage";
 	import { modalController } from '$ionic/svelte'
     import * as allIonicIcons from 'ionicons/icons';
 	export let title: string = 'Sample Modal';

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { preloadCode } from '$app/navigation';
-	import { currentUser } from '$services/supabase.auth.service';
+	import { currentUser } from '$services/pocketbase.auth.service';
 	import { currentState } from '$services/state.service';
 	import * as allIonicIcons from 'ionicons/icons'
 	import { goto } from '$app/navigation'
@@ -37,7 +37,7 @@
 
 <ion-app>
 	<ion-split-pane when={false} content-id="main">
-		{#if $currentUser}
+		{#if true || $currentUser}
 		<Menu />
 		{/if}
 		<div class="ion-page" id="main">
