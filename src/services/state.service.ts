@@ -1,5 +1,4 @@
-import { currentUser } from '$services/pocketbase.auth.service'
-import { supabase } from '$services/supabase.service'
+import { currentUser } from '$services/backend.service'
 import { writable } from 'svelte/store';
 
 let user: any = {};

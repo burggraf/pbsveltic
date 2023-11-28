@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
 	import { preloadCode } from '$app/navigation';
-	import { currentUser } from '$services/pocketbase.auth.service';
+	import { currentUser } from '$services/backend.service';
 	import { currentState } from '$services/state.service';
 	import * as allIonicIcons from 'ionicons/icons'
 	import { goto } from '$app/navigation'

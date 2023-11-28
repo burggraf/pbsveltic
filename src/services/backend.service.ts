@@ -1,8 +1,19 @@
-import { pb } from '$services/pocketbase.service';
+import PocketBase, { BaseAuthStore } from 'pocketbase';
 import { writable } from 'svelte/store';
 
-export let currentUser: any = writable<any | null>(null);
+/*
+class CustomAuthStore extends BaseAuthStore {
+    save(token: any, model: any) {
+        super.save(token, model);
 
+        // your custom business logic...
+    }
+}
+export const pb = new PocketBase('http://127.0.0.1:8090', new CustomAuthStore());
+*/
+export const pb = new PocketBase('http://127.0.0.1:8090');
+
+export let currentUser: any = writable<any | null>(null);
 
 const removeListener1 = pb.authStore.onChange((token, model) => {
   console.log('********* authStore changed:', token, model)
@@ -21,19 +32,5 @@ export const loadUser = async () => {
   }
 };
 loadUser();
-
-// supabase.auth.onAuthStateChange(async (event, session) => {
-//   currentUser.set(session?.user ?? null);
-// });  
-
-// export let currentUserId = '';
-// currentUser.subscribe((value: any) => {
-//   if (value?.id) {
-//     currentUserId = value?.id;
-//   } else {
-//     currentUserId = '';
-//   }
-// })
-
 
 

@@ -9,7 +9,7 @@
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	// import { page } from '$app/stores'
-	import { currentUser } from '$services/pocketbase.auth.service'
+	import { currentUser } from '$services/backend.service'
 	import Login from '$components/Login.svelte'
 
 	import AccordionMenu from './AccordionMenu.svelte'

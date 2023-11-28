@@ -1,7 +1,7 @@
 <script lang="ts">
 	import IonPage from "$ionpage";
 
-	import { currentUser } from '$services/pocketbase.auth.service';
+	import { currentUser } from '$services/backend.service';
 	import { goto } from '$app/navigation';
 	import * as allIonicIcons from 'ionicons/icons';
 	import LoginModal from '$components/LoginModal.svelte';
