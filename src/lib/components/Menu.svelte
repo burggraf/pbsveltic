@@ -68,6 +68,7 @@
 			icon: 'barChart',
 			children: [
 				{ title: 'Welcome', url: 'welcome', icon: 'map', disabled: false },
+				{ title: 'Quiz', url: 'quiz', icon: 'map', disabled: false },
 			],
 		},
 		{
