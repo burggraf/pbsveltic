@@ -2,7 +2,12 @@
 	import IonPage from "$ionpage";
     import { pb } from '$services/backend.service';
 	import { onMount } from "svelte"
-    interface Question {
+    type tplotOptions = {
+    [key: string]: boolean
+    }
+
+    type Question = {
+        [key: string]: any;
         id: string;
         category: string;
         subcategory: string;
@@ -18,6 +23,7 @@
         collectionName: string;
         correctAnswer: string;
         correctLetter: string;
+        answerMap: any; //string[];
     }
     let question: Question = {
         id: '',
@@ -35,6 +41,7 @@
         collectionName: '',
         correctAnswer: '',
         correctLetter: '',
+        answerMap: [],
     };
     let result = '';
     // create a random string of 15 characters containing only lower-case letters and digits
@@ -51,60 +58,39 @@
         });
         // randomize the order of the answers
         question = record as Question; 
-        question.correctAnswer = question.a;
-        console.log('correctAnswer', question.correctAnswer)
-        const a = question.a;
-        const b = question.b;
-        const c = question.c;
-        const d = question.d;   
-        console.log('a', a) 
-        console.log('b', b)
-        console.log('c', c)
-        console.log('d', d)   
-        const answers = [question.a, question.b, question.c, question.d];
-        // randomize the order of the answers
-        answers.sort(() => Math.random() - 0.5);
-        console.log('answers: ', answers);
-        question.a = answers[0];
-        question.b = answers[1];
-        question.c = answers[2];
-        question.d = answers[3];
-        // find the letter of the correct answer
-        if (question.a === question.correctAnswer) {
-            question.correctLetter = 'a';
-        } else if (question.b === question.correctAnswer) {
-            question.correctLetter = 'b';
-        } else if (question.c === question.correctAnswer) {
-            question.correctLetter = 'c';
-        } else if (question.d === question.correctAnswer) {
-            question.correctLetter = 'd';
-        }
-        // copy the record to the question variable
+        question.answerMap = ['a', 'b', 'c', 'd'].sort(() => Math.random() - 0.5);
     }
     onMount(async () => {
         await getQuestion();
     });
-    const selectAnswer = (answer: string, letter: string) => {
+    const selectAnswer = (letter: string) => {
+        // get position of this letter in the answerMap
+        const index = question.answerMap.indexOf(letter);
+        const chosenEl: any = document.getElementById(`item-${index}`);
         return () => {
-            const x: any= document.getElementById(question.correctLetter);
-            if (x) x.color = "success"
-            if (answer === question.correctAnswer) {
+            if (letter === 'a') {
                 result = 'Correct!';
+                if (chosenEl) {
+                    chosenEl.color = 'success';
+                }
             } else {
+                if (chosenEl) {
+                    chosenEl.color = 'danger';
+                }
+                const correctEl: any = document.getElementById(`item-${question.answerMap.indexOf('a')}`);
+                if (correctEl) {
+                    correctEl.color = 'success';
+                }
                 result = 'Incorrect!';
-                const y: any= document.getElementById(letter);
-                if (y) y.color = "danger"
             }
             setTimeout(() => {
                 result = '';
-                const aa: any = document.getElementById('a');
-                const bb: any = document.getElementById('b');
-                const cc: any = document.getElementById('c');
-                const dd: any = document.getElementById('d');
-                aa.color = "dark";
-                bb.color = "dark";
-                cc.color = "dark";
-                dd.color = "dark";
+                for (let i = 0; i < 4; i++) {
+                    const el: any = document.getElementById(`item-${i}`);
+                    if (el) {
+                        el.color = '';
+                    }
+                }
                 getQuestion();
             }, 2000)
         }
@@ -120,28 +106,28 @@
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-        <h1>
-            quiz 
-        </h1>
+        <h3>
+            Category: {question.category} <br/>
+            Subcategory: {question.subcategory}
+        </h3>
         <h2>
             {question.question}
         </h2>
         <ion-list>
-            <ion-item on:click={selectAnswer(question.a, 'a')}>
-                <ion-label id="a">{question.a}</ion-label>
+            <ion-item id="item-0" on:click={selectAnswer(question.answerMap[0])}>
+                <ion-label>{question[question.answerMap[0]]}</ion-label>
             </ion-item>
-            <ion-item on:click={selectAnswer(question.b, 'b')}>
-                <ion-label id="b">{question.b}</ion-label>
+            <ion-item id="item-1" on:click={selectAnswer(question.answerMap[1])}>
+                <ion-label>{question[question.answerMap[1]]}</ion-label>
             </ion-item>
-            <ion-item on:click={selectAnswer(question.c, 'c')}>
-                <ion-label id="c">{question.c}</ion-label>
+            <ion-item id="item-2" on:click={selectAnswer(question.answerMap[2])}>
+                <ion-label>{question[question.answerMap[2]]}</ion-label>
             </ion-item>
-            <ion-item on:click={selectAnswer(question.d, 'd')}>
-                <ion-label id="d">{question.d}</ion-label>
+            <ion-item id="item-3" on:click={selectAnswer(question.answerMap[3])}>
+                <ion-label>{question[question.answerMap[3]]}</ion-label>
             </ion-item>
         </ion-list>
             <h1>{result}</h1>
-        <pre>{JSON.stringify(question,null,2)}</pre>
     </ion-content>
 </IonPage>
 <style>
