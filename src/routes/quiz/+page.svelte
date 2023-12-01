@@ -2,47 +2,10 @@
 	import IonPage from "$ionpage";
     import { pb } from '$services/backend.service';
 	import { onMount } from "svelte"
-    type tplotOptions = {
-    [key: string]: boolean
-    }
-
-    type Question = {
-        [key: string]: any;
-        id: string;
-        category: string;
-        subcategory: string;
-        question: string;
-        a: string;
-        b: string;
-        c: string;
-        d: string;
-        difficulty: string;
-        updated: string;
-        created: string;
-        collectionId: string;
-        collectionName: string;
-        correctAnswer: string;
-        correctLetter: string;
-        answerMap: any; //string[];
-    }
-    let question: Question = {
-        id: '',
-        category: '',
-        subcategory: '',
-        question: '',
-        a: '',
-        b: '',
-        c: '',
-        d: '',
-        difficulty: '',
-        updated: '',
-        created: '',
-        collectionId: '',
-        collectionName: '',
-        correctAnswer: '',
-        correctLetter: '',
-        answerMap: [],
-    };
+    import type { Question } from './quiz.interfaces'
+    import { initQuestion } from "./quiz.interfaces";
+    import { currentUser } from '$services/backend.service';
+    let question: Question = initQuestion();
     let result = '';
     // create a random string of 15 characters containing only lower-case letters and digits
     const randomString = () => {
@@ -52,17 +15,67 @@
         return result;
     };
     const getQuestion = async () => {
-        // or fetch only the first record that matches the specified filter
-        const record = await pb.collection('trivia').getFirstListItem(`id>="${randomString()}"`, {
-            expand: 'id,category,subcategory,question,a,b,c,d,difficulty',
-        });
+        console.log('****** getQuestion()');
+        let record;
+        try {
+            // or fetch only the first record that matches the specified filter
+            record = await pb.collection('trivia').getFirstListItem(`id>="${randomString()}"`, {
+                expand: 'id,category,subcategory,question,a,b,c,d,difficulty',
+                sort: 'id'
+            });
+        } catch (error: any) {
+            if (error.status === 404) {
+                try {
+                    record = await pb.collection('trivia').getFirstListItem(`id<="${randomString()}"`, {
+                        expand: 'id,category,subcategory,question,a,b,c,d,difficulty',
+                        sort: '-id'
+                    });
+                } catch (error2: any) {
+                    if (error2.status === 404) {
+                        console.log('*** no more questions ***');
+                        return;
+                    } else {
+                        console.log('*** error2 ***', error2);
+                        return;
+                    }
+
+                }
+            }
+        }
+        // look up the record by id
+        try {
+            const usedQuestion = await pb.collection('trivia_log').getFirstListItem(`question="${record?.id || ''}"`, {
+                expand: 'question',
+            });
+            console.log('***************************************');
+            console.log('*** usedQuestion ***', usedQuestion);
+            console.log('***************************************');
+            getQuestion();
+        } catch (notUsed: any) {
+            if (notUsed.status === 404) {
+                // console.log('*** notUsed ***', notUsed);
+                question = record as Question; 
+                question.answerMap = ['a', 'b', 'c', 'd'].sort(() => Math.random() - 0.5);
+            }
+        }
+
         // randomize the order of the answers
-        question = record as Question; 
-        question.answerMap = ['a', 'b', 'c', 'd'].sort(() => Math.random() - 0.5);
     }
     onMount(async () => {
         await getQuestion();
     });
+    const logQuestion = async (letter: string) => {
+        if (!$currentUser) {
+            console.log('*** no currentUser -- aborting logQuestion() ***');
+            return;
+        }
+        pb.collection('trivia_log').create({
+            question: question.id,
+            chosen: letter,
+            correct: letter === 'a',
+            user: $currentUser.id,
+        });
+    }
     const selectAnswer = (letter: string) => {
         // get position of this letter in the answerMap
         const index = question.answerMap.indexOf(letter);
@@ -83,6 +96,7 @@
                 }
                 result = 'Incorrect!';
             }
+            logQuestion(letter);
             setTimeout(() => {
                 result = '';
                 for (let i = 0; i < 4; i++) {

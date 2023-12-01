@@ -1,11 +1,4 @@
 <script lang="ts">
-	console.log('****************************')
-	console.log('****************************')
-	console.log('****************************')
-	console.log('*** Menu.svelte')
-	console.log('****************************')
-	console.log('****************************')
-	console.log('****************************')
 	import { onMount } from 'svelte'
 	import { goto } from '$app/navigation'
 	// import { page } from '$app/stores'
@@ -42,7 +35,6 @@
 	onMount(() => {
 		// this is unfortunately needed in order to have the menuController API function properly
 		// without this, clicking on the icon at the top left does not close the menu
-		console.log('** menu onMount')
 		registerMenu('mainmenu')
 	})
 

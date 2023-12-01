@@ -11,7 +11,21 @@ class CustomAuthStore extends BaseAuthStore {
 }
 export const pb = new PocketBase('http://127.0.0.1:8090', new CustomAuthStore());
 */
-export const pb = new PocketBase('http://127.0.0.1:8090');
+
+// get current host and port
+const host = window.location.hostname;
+let port = window.location.port;
+if (host === 'localhost' || host === '127.0.0.1') port = '8090';
+// get current protocol (http or https)
+const protocol = window.location.protocol;
+console.log('********************************')
+console.log('******* backend.service.ts: host', host);
+console.log('******* backend.service.ts: port', port);
+console.log('******* backend.service.ts: protocol', protocol);
+console.log(`${protocol}//${host}:${port}`)
+console.log('********************************')
+export const pb = new PocketBase(`${protocol}//${host}:${port}`);
+//export const pb = new PocketBase('http://west.ovh.dmarie.com');
 
 export let currentUser: any = writable<any | null>(null);
 
