@@ -6,7 +6,6 @@
     import { initQuestion } from "./quiz.interfaces";
     import { currentUser } from '$services/backend.service';
     let question: Question = initQuestion();
-    let result = '';
     // create a random string of 15 characters containing only lower-case letters and digits
     const randomString = () => {
         const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -82,9 +81,9 @@
         const chosenEl: any = document.getElementById(`item-${index}`);
         return () => {
             if (letter === 'a') {
-                result = 'Correct!';
                 if (chosenEl) {
                     chosenEl.color = 'success';
+                    chosenEl.fill = 'outline';
                 }
             } else {
                 if (chosenEl) {
@@ -93,16 +92,16 @@
                 const correctEl: any = document.getElementById(`item-${question.answerMap.indexOf('a')}`);
                 if (correctEl) {
                     correctEl.color = 'success';
+                    correctEl.fill = 'outline';
                 }
-                result = 'Incorrect!';
             }
             logQuestion(letter);
             setTimeout(() => {
-                result = '';
                 for (let i = 0; i < 4; i++) {
                     const el: any = document.getElementById(`item-${i}`);
                     if (el) {
                         el.color = '';
+                        el.fill = 'clear';
                     }
                 }
                 getQuestion();
@@ -120,28 +119,25 @@
         </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-        <h3>
-            Category: {question.category} <br/>
-            Subcategory: {question.subcategory}
-        </h3>
-        <h2>
-            {question.question}
-        </h2>
-        <ion-list>
-            <ion-item id="item-0" on:click={selectAnswer(question.answerMap[0])}>
-                <ion-label>{question[question.answerMap[0]]}</ion-label>
-            </ion-item>
-            <ion-item id="item-1" on:click={selectAnswer(question.answerMap[1])}>
-                <ion-label>{question[question.answerMap[1]]}</ion-label>
-            </ion-item>
-            <ion-item id="item-2" on:click={selectAnswer(question.answerMap[2])}>
-                <ion-label>{question[question.answerMap[2]]}</ion-label>
-            </ion-item>
-            <ion-item id="item-3" on:click={selectAnswer(question.answerMap[3])}>
-                <ion-label>{question[question.answerMap[3]]}</ion-label>
-            </ion-item>
-        </ion-list>
-            <h1>{result}</h1>
+
+        <ion-card>
+            <ion-card-header>
+              <ion-card-title>{question.category}</ion-card-title>
+              <ion-card-subtitle>{question.subcategory}</ion-card-subtitle>
+            </ion-card-header>
+          
+            <ion-card-content>
+                {question.question}
+            </ion-card-content>
+          
+            <div class="ion-padding">
+            <ion-button id="item-0" fill="clear" on:click={selectAnswer(question.answerMap[0])}>{question[question.answerMap[0]]}</ion-button>
+            <ion-button id="item-1" fill="clear" on:click={selectAnswer(question.answerMap[1])}>{question[question.answerMap[1]]}</ion-button>
+            <ion-button id="item-2" fill="clear" on:click={selectAnswer(question.answerMap[2])}>{question[question.answerMap[2]]}</ion-button>
+            <ion-button id="item-3" fill="clear" on:click={selectAnswer(question.answerMap[3])}>{question[question.answerMap[3]]}</ion-button>
+            </div>
+        </ion-card>
+
     </ion-content>
 </IonPage>
 <style>
