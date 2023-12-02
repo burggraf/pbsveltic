@@ -6,59 +6,10 @@
     import { initQuestion } from "./quiz.interfaces";
     import { currentUser } from '$services/backend.service';
     let question: Question = initQuestion();
-    // create a random string of 15 characters containing only lower-case letters and digits
-    const randomString = () => {
-        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-        let result = '';
-        for (let i = 15; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
-        return result;
-    };
     const getQuestion = async () => {
-        console.log('****** getQuestion()');
-        let record;
-        try {
-            // or fetch only the first record that matches the specified filter
-            record = await pb.collection('trivia').getFirstListItem(`id>="${randomString()}"`, {
-                expand: 'id,category,subcategory,question,a,b,c,d,difficulty',
-                sort: 'id'
-            });
-        } catch (error: any) {
-            if (error.status === 404) {
-                try {
-                    record = await pb.collection('trivia').getFirstListItem(`id<="${randomString()}"`, {
-                        expand: 'id,category,subcategory,question,a,b,c,d,difficulty',
-                        sort: '-id'
-                    });
-                } catch (error2: any) {
-                    if (error2.status === 404) {
-                        console.log('*** no more questions ***');
-                        return;
-                    } else {
-                        console.log('*** error2 ***', error2);
-                        return;
-                    }
-
-                }
-            }
-        }
-        // look up the record by id
-        try {
-            const usedQuestion = await pb.collection('trivia_log').getFirstListItem(`question="${record?.id || ''}"`, {
-                expand: 'question',
-            });
-            console.log('***************************************');
-            console.log('*** usedQuestion ***', usedQuestion);
-            console.log('***************************************');
-            getQuestion();
-        } catch (notUsed: any) {
-            if (notUsed.status === 404) {
-                // console.log('*** notUsed ***', notUsed);
-                question = record as Question; 
-                question.answerMap = ['a', 'b', 'c', 'd'].sort(() => Math.random() - 0.5);
-            }
-        }
-
-        // randomize the order of the answers
+        const result = await pb.send("/getquestion", {});
+        question = result.result as Question; 
+        question.answerMap = ['a', 'b', 'c', 'd'].sort(() => Math.random() - 0.5);
     }
     onMount(async () => {
         await getQuestion();
@@ -71,7 +22,7 @@
         pb.collection('trivia_log').create({
             question: question.id,
             chosen: letter,
-            correct: letter === 'a',
+            correct: (letter === 'a'),
             user: $currentUser.id,
         });
     }
@@ -140,8 +91,4 @@
 
     </ion-content>
 </IonPage>
-<style>
-    .correct {
-        color: green;
-    }
-</style>
+<style></style>
