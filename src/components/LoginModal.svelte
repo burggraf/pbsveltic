@@ -3,7 +3,7 @@
 	import { modalController } from '$ionic/svelte';
 	import LoginProviderSignInButton from './LoginProviderSignInButton.svelte';
 	import type { Provider } from '@supabase/supabase-js';
-	import { showConfirm } from '$services/alert.service';
+	import { showAlert } from '$services/alert.service';
 	import { toast } from '$services/toast';
 	import { loadingBox } from '$services/loadingMessage';
 	export let providers: Provider[] = [];
@@ -68,19 +68,33 @@
 
 	const doSignInWithEmail = async () => {
 		const loader = await loadingBox('Logging in...');
-		const { user, session, error } = await signInWithEmail(email, password);
+		const { user, error } = await signInWithEmail(email, password);
 		if (error) {
 			console.error('error.message: ', error.message);
-			if (error.message === 'Invalid login credentials') {
+			if (error.message === 'Failed to authenticate.') {
 				loader.dismiss();
-				await showConfirm({
+				await showAlert({
 					header: 'Invalid login credentials',
-					message: `If you you have not already created an account, tap <b>OK</b> to create your account now.  If you've just typed an incorrect password, tap <b>Cancel</b> and try again.`,
-					okHander: async () => {
-						signUp();
-					}
-				});
+					message: `If you you have not already created an account, tap "Sign Up Now" to create one.`,
+					buttons: [
+						{
+							text: 'Try Again',
+							role: 'cancel',
+							handler: () => {
+								console.log('Cancel clicked');
+							}
+						},
+						{
+							text: 'Sign Up Now',
+							handler: async () => {
+								signUpMode = true;
+								signUp();
+							}
+						}
+					]
+				})
 			} else {
+				loader.dismiss();
 				toast(error.message, 'danger', 5000);
 			}
 		} else {
@@ -88,21 +102,28 @@
 			showModal = false;
 			modalController.dismiss({ data: Date.now() });
 			if (onSignIn) {
-				onSignIn(user, session);
+				onSignIn(user);
 			}
 		}
 	};
 
 	const signUp = async () => {
 		const loader = await loadingBox('Signing you up...');
-		const { user, session, error } = await signUpWithEmail(email, password);
+		const { user, error } = await signUpWithEmail(email, password);
 		if (user) {
 			loader.dismiss();
 			showModal = false;
 			modalController.dismiss({ data: Date.now() });
 			if (onSignIn) {
-				onSignIn(user, session);
+				onSignIn(user);
 			}
+		} else {
+			if (error.message = 'Failed to create record.')
+			// this usually means the user already exists
+			loader.dismiss();
+			signUpMode = false;
+			doSignInWithEmail();
+			return;
 		}
 		if (error) {
 			console.error(error);
@@ -110,7 +131,7 @@
 			toast(error.message);
 		} else {
 			loader.dismiss();
-			if (!session) {
+			if (!error) {
 				toast('Please check your email for a confirmation link', 'dark', 5000);
 			}
 		}
@@ -119,16 +140,17 @@
 		signUpMode = !signUpMode;
 	};
 	const doSendMagicLink = async () => {
-		const loader = await loadingBox('Requesting magic link...');
-		const { /*user, session,*/ error } = await sendMagicLink(email);
-		if (error) {
-			loader.dismiss();
-			toast(error.message);
-		} else {
-			//setShowLoading(false);
-			loader.dismiss();
-			toast('Please check your email for a sign in link', 'dark', 5000);
-		}
+		toast('Not implemented yet', 'danger', 5000)
+		// const loader = await loadingBox('Requesting magic link...');
+		// const { /*user, session,*/ error } = await sendMagicLink(email);
+		// if (error) {
+		// 	loader.dismiss();
+		// 	toast(error.message);
+		// } else {
+		// 	//setShowLoading(false);
+		// 	loader.dismiss();
+		// 	toast('Please check your email for a sign in link', 'dark', 5000);
+		// }
 	};
 	let email = '';
 	let password = '';
@@ -231,7 +253,7 @@
 					</div>
 				</ion-col>
 			</ion-row>
-			{#if password.length > 0 && password.length < 6}
+			{#if (password.length > 0 && password.length < 6)}
 				<ion-row>
 					<ion-col>
 						<ion-label color="danger"><b>Password too short</b></ion-label>
@@ -244,7 +266,7 @@
 						<ion-button
 							expand="block"
 							color="primary"
-							disabled={!validateEmail(email) || password.length < 6}
+							disabled={(!validateEmail(email) || password.length < 6)}
 							on:click={doSignInWithEmail}
 						>
 							<ion-icon icon={arrowForwardOutline} size="large" />&nbsp;&nbsp;
@@ -281,7 +303,7 @@
 					</ion-col>
 				</ion-row>
 			{/if}
-			<ion-row>
+			<!-- <ion-row>
 				<ion-col>
 					<div class="ion-text-center" style="margin-bottom:10px">
 						<ion-label><b>or</b></ion-label>
@@ -295,7 +317,7 @@
 						<b>Send Sign In Link</b></ion-button
 					>
 				</ion-col>
-			</ion-row>
+			</ion-row> -->
 		</ion-grid>
 		{#if providers && providers.length > 0}
 			<div class="ion-text-center">

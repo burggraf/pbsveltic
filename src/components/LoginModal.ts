@@ -3,7 +3,7 @@ import { currentUser } from '$services/backend.service';
 import { toast } from '$services/toast';
 
 export const signUpWithEmail = async (email: string, password: string) => {
-
+  let error: any = null;
   try {
     const user = await pb.collection("users").create({
       email,
@@ -30,12 +30,12 @@ export const signUpWithEmail = async (email: string, password: string) => {
       console.log('******************************************************')
 
       return { user, error: null};
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { user, error};
     }
     return { user, error: null};
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return { user: null, error}
   }
@@ -71,9 +71,10 @@ export const signUpWithEmail = async (email: string, password: string) => {
       if (pb.authStore.model) console.log('pb.authStore.model',pb.authStore.model);
       else console.log('pb.authStore.model', 'null');
       currentUser.set(pb.authStore.model);
+      let error: any = null;
       return { user: authData, error: null };
   
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       currentUser.set(null);
       return { user: null, error}
@@ -84,7 +85,7 @@ export const signUpWithEmail = async (email: string, password: string) => {
     try {
       const data = await pb.collection('users').requestPasswordReset(email);
       return { data, error: null };
-    } catch (error) {
+    } catch (error: any) {
       return { data: null, error };
     }
   }
