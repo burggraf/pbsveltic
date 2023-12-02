@@ -35,14 +35,17 @@ const removeListener1 = pb.authStore.onChange((token, model) => {
 });
 
 export const loadUser = async () => {
+    console.log('loadUser()')
+    console.log('pb.authStore.model', pb.authStore.model)
   // get all keys from localStorage
   if (pb.authStore.model) {
     currentUser.set(pb.authStore.model);
-  }
-  pb.collection('users').authRefresh()
-  const user = await pb.collection('users').authRefresh();
-  if (user?.record) {
-    currentUser.set(user.record);
+    pb.collection('users').authRefresh()
+    // const user = await pb.collection('users').authRefresh();
+    // if (user?.record) {
+    //   console.log('updating user.record', user.record)
+    //   currentUser.set(user.record);
+    // }  
   }
 };
 loadUser();

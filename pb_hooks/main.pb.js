@@ -14,6 +14,7 @@ routerAdd("GET", "/getquestion", (c) => {
     try {
         const user = c.get("authRecord") // empty if not authenticated as regular auth record    
         if (user === null) {
+            console.log("user is null")
             try {
                 $app.dao().db()
                 .newQuery(`SELECT trivia.a,trivia.b,trivia.c,trivia.d,trivia.category,trivia.difficulty,trivia.subcategory,trivia.id,trivia.question FROM trivia where trivia.id >= '${randomString()}' order by trivia.id asc LIMIT 1`)
@@ -32,6 +33,7 @@ routerAdd("GET", "/getquestion", (c) => {
                 }
             }    
         } else {
+            console.log("user is: ", user?.id)
             try {
                 $app.dao().db()
                 .newQuery(`SELECT trivia.a,trivia.b,trivia.c,trivia.d,trivia.category,trivia.difficulty,trivia.subcategory,trivia.id,trivia.question FROM trivia left outer join trivia_log on trivia_log.user = '${user?.id}' and trivia_log.question = trivia.id where trivia.id >= '${randomString()}' and trivia_log.id is null order by trivia.id asc LIMIT 1`)
