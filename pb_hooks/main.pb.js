@@ -1,4 +1,3 @@
-
 routerAdd("GET", "/getquestion", (c) => {
     // let name = c.pathParam("name")
     function randomString() {
@@ -61,40 +60,11 @@ routerAdd("GET", "/getquestion", (c) => {
 
 }, /* optional middlewares */)
 
-routerAdd("GET", "/verify/:token", (c) => {
-    let token = c.pathParam("token")
-    // http://127.0.0.1:8090/_/#/auth/confirm-verification/<token>
-
-    return c.json(200, { "message": "Token " + token })
-})
-
-routerAdd("GET", "/hello/:name", (c) => {
-    let name = c.pathParam("name")
-    let obj = {}
-    try {
-        const user = c.get("authRecord") // empty if not authenticated as regular auth record    
-        return c.json(200, { "message": "Hello " + name, user })
-    } catch (err) {
-        console.log("err:", err)
-        return c.json(200, { "err": err })
-    }
-
-
-}, /* optional middlewares */)
-
-// routerAdd("POST", "/hello", (c) => {
-//     // let name = c.bodyParam("name")
-//     const name = "John Doe"
-//     console.log("c:", JSON.stringify(c,null,2))
-
-//     return c.json(200, { "message": "Hello " + name })
-// }, /* optional middlewares */)
-
 
 // fires only for "users" (not) "managers" auth collections
-onRecordAfterConfirmVerificationRequest((e) => {
-    console.log('onRecordAfterConfirmVerificationRequest: e.httpContext',JSON.stringify(e.httpContext,null,2))
-    console.log('onRecordAfterConfirmVerificationRequest: e.record',JSON.stringify(e.record,null,2))
-    // e.redirect(200, "http://localhost:8100/welcome");
-}, "users")
+// onRecordAfterConfirmVerificationRequest((e) => {
+//     console.log('onRecordAfterConfirmVerificationRequest: e.httpContext',JSON.stringify(e.httpContext,null,2))
+//     console.log('onRecordAfterConfirmVerificationRequest: e.record',JSON.stringify(e.record,null,2))
+//     // e.redirect(200, "http://localhost:8100/welcome");
+// }, "users")
 
