@@ -70,3 +70,89 @@ routerAdd("GET", "/getquestion", (c) => {
 //     // e.redirect(200, "http://localhost:8100/welcome");
 // }, "users")
 
+
+onRealtimeConnectRequest((e) => {
+    ////console.log('onRealtimeConnectRequest', JSON.stringify(e,null,2))
+    // for (let attr in e.httpContext) {
+    //     console.log(`httpContext.${attr} = ${e.httpContext[attr]}`)
+    // }
+/*
+2023/12/02 08:07:03 client.channel = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.discard = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.get = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.hasSubscription = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.id = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.isDiscarded = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.send = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.set = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.subscribe = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.subscriptions = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.unset = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:07:03 client.unsubscribe = function reflect.methodValueCall() { [native code] }
+
+2023/12/02 08:20:08 httpContext.attachment = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.bind = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.blob = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.cookie = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.cookies = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.echo = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.error = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.file = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.fileFS = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.formFile = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.formValue = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.formValueDefault = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.formValues = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.get = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.html = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.htmlBlob = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.inline = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.isTLS = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.isWebSocket = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.json = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.jsonBlob = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.jsonp = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.jsonpBlob = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.jsonPretty = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.multipartForm = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.noContent = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.path = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.pathParam = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.pathParamDefault = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.pathParams = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.queryParam = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.queryParamDefault = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.queryParams = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.queryString = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.rawPathParams = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.realIP = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.redirect = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.render = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.request = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.reset = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.response = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.routeInfo = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.scheme = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.set = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.setCookie = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.setPath = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.setPathParams = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.setRawPathParams = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.setRequest = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.setResponse = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.setRouteInfo = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.stream = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.string = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.validate = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.xml = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.xmlBlob = function reflect.methodValueCall() { [native code] }
+2023/12/02 08:20:08 httpContext.xmlPretty = function reflect.methodValueCall() { [native code] }
+
+
+*/
+
+})
+
+onRealtimeDisconnectRequest((e) => {
+    ////console.log('onRealtimeDisconnectRequest', JSON.stringify(e,null,2))
+})

@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { signUpWithEmail, sendMagicLink, signInWithEmail, resetPassword } from './LoginModal';
-	import { modalController } from '$ionic/svelte';
-	import LoginProviderSignInButton from './LoginProviderSignInButton.svelte';
-	import type { Provider } from '@supabase/supabase-js';
-	import { showAlert } from '$services/alert.service';
-	import { toast } from '$services/toast';
-	import { loadingBox } from '$services/loadingMessage';
-	export let providers: Provider[] = [];
-	export let onSignIn: Function = () => {};
+	import { signUpWithEmail, sendMagicLink, signInWithEmail, resetPassword } from './LoginModal'
+	import { modalController } from '$ionic/svelte'
+	import LoginProviderSignInButton from './LoginProviderSignInButton.svelte'
+	import type { Provider } from '@supabase/supabase-js'
+	import { showAlert } from '$services/alert.service'
+	import { toast } from '$services/toast'
+	import { loadingBox } from '$services/loadingMessage'
+	export let providers: Provider[] = []
+	export let onSignIn: Function = () => {}
 
 	import {
 		mailOutline,
@@ -16,9 +16,10 @@
 		lockOpenOutline,
 		lockClosedOutline,
 		arrowForwardOutline,
-		link
-	} from 'ionicons/icons';
-	import { onMount } from 'svelte';
+		link,
+		personOutline,
+	} from 'ionicons/icons'
+	import { onMount } from 'svelte'
 
 	const logoColors: any = {
 		google: 'rgb(227,44,41)',
@@ -35,44 +36,47 @@
 		azure: 'rgb(228,54,26)',
 		linkedin: 'rgb(2,119,181)',
 		zoom: 'rgb(45,140,255)',
-		notion: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'gray' : 'black'
-	};
-	let showModal = false;
+		notion: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'gray' : 'black',
+	}
+	let showModal = false
 	const closeOverlay = () => {
-		modalController.dismiss({ data: Date.now() });
-	};
+		modalController.dismiss({ data: Date.now() })
+	}
 
 	function handleEmailValue(event: any) {
-		email = event.target.value!;
+		email = event.target.value!
 	}
 	function handlePasswordValue(event: any) {
-		password = event.target.value!;
+		password = event.target.value!
+	}
+	function handleNameValue(event: any) {
+		name = event.target.value!
 	}
 
 	const validateEmail = (email: string) => {
 		const re =
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		return re.test(String(email).toLowerCase());
-	};
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+		return re.test(String(email).toLowerCase())
+	}
 	const doResetPassword = async () => {
-		const loader = await loadingBox('Requesting password reset link...');
-		const { /*data,*/ error } = await resetPassword(email);
+		const loader = await loadingBox('Requesting password reset link...')
+		const { /*data,*/ error } = await resetPassword(email)
 		if (error) {
-			loader.dismiss();
-			toast(error.message);
+			loader.dismiss()
+			toast(error.message)
 		} else {
-			loader.dismiss();
-			toast('Please check your email for a password reset link', 'dark', 5000);
+			loader.dismiss()
+			toast('Please check your email for a password reset link', 'dark', 5000)
 		}
-	};
+	}
 
 	const doSignInWithEmail = async () => {
-		const loader = await loadingBox('Logging in...');
-		const { user, error } = await signInWithEmail(email, password);
+		const loader = await loadingBox('Logging in...')
+		const { user, error } = await signInWithEmail(email, password)
 		if (error) {
-			console.error('error.message: ', error.message);
+			console.error('error.message: ', error.message)
 			if (error.message === 'Failed to authenticate.') {
-				loader.dismiss();
+				loader.dismiss()
 				await showAlert({
 					header: 'Invalid login credentials',
 					message: `If you you have not already created an account, tap "Sign Up Now" to create one.`,
@@ -81,64 +85,64 @@
 							text: 'Try Again',
 							role: 'cancel',
 							handler: () => {
-								console.log('Cancel clicked');
-							}
+								console.log('Cancel clicked')
+							},
 						},
 						{
 							text: 'Sign Up Now',
 							handler: async () => {
-								signUpMode = true;
-								signUp();
-							}
-						}
-					]
+								signUpMode = true
+								signUp()
+							},
+						},
+					],
 				})
 			} else {
-				loader.dismiss();
-				toast(error.message, 'danger', 5000);
+				loader.dismiss()
+				toast(error.message, 'danger', 5000)
 			}
 		} else {
-			loader.dismiss();
-			showModal = false;
-			modalController.dismiss({ data: Date.now() });
+			loader.dismiss()
+			showModal = false
+			modalController.dismiss({ data: Date.now() })
 			if (onSignIn) {
-				onSignIn(user);
+				onSignIn(user)
 			}
 		}
-	};
+	}
 
 	const signUp = async () => {
-		const loader = await loadingBox('Signing you up...');
-		const { user, error } = await signUpWithEmail(email, password);
+		const loader = await loadingBox('Signing you up...')
+		const { user, error } = await signUpWithEmail(email, password, name)
 		if (user) {
-			loader.dismiss();
-			showModal = false;
-			modalController.dismiss({ data: Date.now() });
+			loader.dismiss()
+			showModal = false
+			modalController.dismiss({ data: Date.now() })
 			if (onSignIn) {
-				onSignIn(user);
+				onSignIn(user)
 			}
 		} else {
-			if (error.message = 'Failed to create record.')
-			// this usually means the user already exists
-			loader.dismiss();
-			signUpMode = false;
-			doSignInWithEmail();
-			return;
+			if ((error.message = 'Failed to create record.'))
+				// this usually means the user already exists
+				loader.dismiss()
+			signUpMode = false
+			doSignInWithEmail()
+			return
 		}
 		if (error) {
-			console.error(error);
-			loader.dismiss();
-			toast(error.message);
+			console.error(error)
+			loader.dismiss()
+			toast(error.message)
 		} else {
-			loader.dismiss();
+			loader.dismiss()
 			if (!error) {
-				toast('Please check your email for a confirmation link', 'dark', 5000);
+				toast('Please check your email for a confirmation link', 'dark', 5000)
 			}
 		}
-	};
+	}
 	const toggleSignUpMode = () => {
-		signUpMode = !signUpMode;
-	};
+		signUpMode = !signUpMode
+	}
 	const doSendMagicLink = async () => {
 		toast('Not implemented yet', 'danger', 5000)
 		// const loader = await loadingBox('Requesting magic link...');
@@ -151,39 +155,38 @@
 		// 	loader.dismiss();
 		// 	toast('Please check your email for a sign in link', 'dark', 5000);
 		// }
-	};
-	let email = '';
-	let password = '';
-	let signUpMode = false;
-	const app_menu_title = __APP_MENU_TITLE__;
+	}
+	let email = ''
+	let password = ''
+	let signUpMode = false
+	let name = ''
+	const app_menu_title = __APP_MENU_TITLE__
 
 	onMount(() => {
 		setTimeout(() => {
 			const thing =
 				document.getElementById('selectorDiv')?.parentElement?.parentElement?.parentElement ||
-				({} as any);
-			const toolbar = document.getElementById('selectorToolbar') || ({} as any);
-			const h = thing?.clientHeight - toolbar?.clientHeight + 'px';
-			const obj1 = document.getElementById('selectorDiv')?.parentElement?.parentElement?.style;
-			const obj2 = document.getElementById('selectorDiv')?.parentElement?.style;
-			const obj3 = document.getElementById('selectorDiv')?.style;
-			if (obj1) obj1.height = h;
-			if (obj2) obj2.height = h;
-			if (obj3) obj3.height = h;
-		}, 200);
-	});
-
+				({} as any)
+			const toolbar = document.getElementById('selectorToolbar') || ({} as any)
+			const h = thing?.clientHeight - toolbar?.clientHeight + 'px'
+			const obj1 = document.getElementById('selectorDiv')?.parentElement?.parentElement?.style
+			const obj2 = document.getElementById('selectorDiv')?.parentElement?.style
+			const obj3 = document.getElementById('selectorDiv')?.style
+			if (obj1) obj1.height = h
+			if (obj2) obj2.height = h
+			if (obj3) obj3.height = h
+		}, 200)
+	})
 </script>
 
 <ion-header translucent={true}>
 	<ion-toolbar id="selectorToolbar">
-		<ion-title>{app_menu_title} Sign {#if signUpMode}Up{:else}In{/if}</ion-title>
+		<ion-title
+			>{app_menu_title} Sign {#if signUpMode}Up{:else}In{/if}</ion-title
+		>
 		<ion-buttons slot="start">
 			<ion-button on:click={closeOverlay}>
-				<ion-icon
-					slot="icon-only"
-					icon={closeOutline}
-				/>
+				<ion-icon slot="icon-only" icon={closeOutline} />
 			</ion-button>
 		</ion-buttons>
 	</ion-toolbar>
@@ -200,21 +203,20 @@
 				<ion-col>
 					<ion-item class="loginItem" lines="none">
 						<ion-input
-							on:ionChange={handleEmailValue}
+							on:ionInput={handleEmailValue}
 							class="loginInputBoxWithIcon"
 							type="email"
 							placeholder="Email"
 							style="--padding-start: 10px;"
-						>
-						</ion-input>
+						/>
 						<ion-icon
-						class="inputIcon"
-						icon={mailOutline}
-						slot="start"
-						size="large"
-						color="medium"
-					/>
-			</ion-item>
+							class="inputIcon"
+							icon={mailOutline}
+							slot="start"
+							size="large"
+							color="medium"
+						/>
+					</ion-item>
 				</ion-col>
 			</ion-row>
 			{#if !validateEmail(email) && email.length > 0}
@@ -235,17 +237,16 @@
 						<ion-input
 							type="password"
 							placeholder="Password"
-							on:ionChange={handlePasswordValue}
+							on:ionInput={handlePasswordValue}
 							class="loginInputBoxWithIcon"
 							style="--padding-start: 10px;"
-						>
-						</ion-input>
+						/>
 						<ion-icon
-						class="inputIcon"
-						icon={password.length ? lockOpenOutline : lockClosedOutline}
-						slot="start"
-						size="large"
-						color="medium"
+							class="inputIcon"
+							icon={password.length ? lockOpenOutline : lockClosedOutline}
+							slot="start"
+							size="large"
+							color="medium"
 						/>
 					</ion-item>
 					<div on:click={doResetPassword} class="ion-text-right" style="padding-top:10px">
@@ -253,20 +254,50 @@
 					</div>
 				</ion-col>
 			</ion-row>
-			{#if (password.length > 0 && password.length < 6)}
+			{#if password.length > 0 && password.length < 6}
 				<ion-row>
 					<ion-col>
 						<ion-label color="danger"><b>Password too short</b></ion-label>
 					</ion-col>
 				</ion-row>
 			{/if}
+
+			{#if signUpMode}
+			<ion-row>
+				<ion-col>
+					<ion-label>Name (optional)</ion-label>
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col>
+					<ion-item class="loginItem" lines="none">
+						<ion-input
+							on:ionInput={handleNameValue}
+							class="loginInputBoxWithIcon"
+							type="text"
+							placeholder="Your name"
+							style="--padding-start: 10px;"
+						/>
+						<ion-icon
+							class="inputIcon"
+							icon={personOutline}
+							slot="start"
+							size="large"
+							color="medium"
+						/>
+					</ion-item>
+				</ion-col>
+			</ion-row>
+			{/if}
+
+
 			{#if !signUpMode}
 				<ion-row>
 					<ion-col>
 						<ion-button
 							expand="block"
 							color="primary"
-							disabled={(!validateEmail(email) || password.length < 6)}
+							disabled={!validateEmail(email) || password.length < 6}
 							on:click={doSignInWithEmail}
 						>
 							<ion-icon icon={arrowForwardOutline} size="large" />&nbsp;&nbsp;
