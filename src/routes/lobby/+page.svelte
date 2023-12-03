@@ -15,17 +15,25 @@
             }
         });  
         window.addEventListener('blur', async () => {
+            console.log('*** LOBBY: window blur ***')
             const record = await pb.collection('lobby').update(subscriptionRecordId, {state:{status: 'away',name: $currentUser.name}});
         });      
         window.addEventListener('focus', async () => {
+            console.log('*** LOBBY: window focus ***')
             const record = await pb.collection('lobby').update(subscriptionRecordId, {state:{status: 'online',name: $currentUser.name}});
         });      
         pb.collection('lobby').subscribe('*', function (e) {
             getAllUsersInLobby();
         });
         getAllUsersInLobby();
-        currentUser.subscribe((user: any) => {
-            setUserStatus();
+        currentUser.subscribe(async (user: any) => {
+            if (user) {
+                setUserStatus();
+            } else {
+                if (subscriptionRecordId) {
+                    const result = await pb.collection('lobby').delete(subscriptionRecordId);
+                }
+            }
         });
     });
     const setUserStatus = async () => {
@@ -75,9 +83,43 @@
     </ion-header>
     <ion-content class="ion-padding">
 
-        <pre>
 
+        <!--
+{
+    "collectionId": "xxxxxxxxxxxxxxx",
+    "collectionName": "lobby",
+    "created": "2023-12-03 15:52:02.559Z",
+    "id": "xxxxxxxxxxxxxxx",
+    "state": {
+      "name": "User Name",
+      "status": "online"
+    },
+    "updated": "2023-12-03 15:52:08.951Z",
+    "user": "xxxxxxxxxxxxxxx"
+  }            
+        -->
+        <ion-grid>
+            <ion-row>
+                <ion-col size="12">
+                    <ion-card>
+                        <ion-card-header>
+                            <ion-card-title>Users in Lobby</ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                            <ion-list>
+                                {#each usersInLobby as user}
+                                <ion-item>
+                                    <ion-label>{user.state.name || 'Unknown User'}</ion-label>
+                                    <ion-badge slot="end" color={user.state.status==='online'?'success':'danger'}>{user.state.status}</ion-badge>
+                                </ion-item>
+                                {/each}
+                            </ion-list>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-col>
+        </ion-grid>
+        <!-- <pre>
             {JSON.stringify(usersInLobby, null, 2)}
-        </pre>
+        </pre> -->
     </ion-content>
 </IonPage>
