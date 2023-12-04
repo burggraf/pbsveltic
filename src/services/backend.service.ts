@@ -24,6 +24,7 @@ console.log('******* backend.service.ts: port', port);
 console.log('******* backend.service.ts: protocol', protocol);
 console.log(`${protocol}//${host}:${port}`)
 console.log('********************************')
+export let apiURL = `${protocol}//${host}:${port}`;
 export const pb = new PocketBase(`${protocol}//${host}:${port}`);
 //export const pb = new PocketBase('http://west.ovh.dmarie.com');
 

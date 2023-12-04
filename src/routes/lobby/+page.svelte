@@ -5,36 +5,43 @@
     import { currentUser } from '$services/backend.service';
     let subscriptionRecordId: string = '';
     let usersInLobby: any = [];
-    
+    let listeners: any = {};
     onMount(async () => {
-        document.addEventListener("visibilitychange", async () => {
+        listeners.visibilityListener = document.addEventListener("visibilitychange", async () => {
             if (document.visibilityState === 'hidden') {
-                const record = await pb.collection('lobby').update(subscriptionRecordId, {state:{status: 'away',name: $currentUser.name}});
+                const record = await pb.collection('userstate').update(subscriptionRecordId, {state:{status: 'away',name: $currentUser.name}});
             } else {
-                const record = await pb.collection('lobby').update(subscriptionRecordId, {state:{status: 'online',name: $currentUser.name}});
+                const record = await pb.collection('userstate').update(subscriptionRecordId, {state:{status: 'online',name: $currentUser.name}});
             }
         });  
-        window.addEventListener('blur', async () => {
+        listeners.blur = window.addEventListener('blur', async () => {
             console.log('*** LOBBY: window blur ***')
-            const record = await pb.collection('lobby').update(subscriptionRecordId, {state:{status: 'away',name: $currentUser.name}});
+            const record = await pb.collection('userstate').update(subscriptionRecordId, {state:{status: 'away',name: $currentUser.name}});
         });      
-        window.addEventListener('focus', async () => {
+        listeners.focus = window.addEventListener('focus', async () => {
             console.log('*** LOBBY: window focus ***')
-            const record = await pb.collection('lobby').update(subscriptionRecordId, {state:{status: 'online',name: $currentUser.name}});
+            const record = await pb.collection('userstate').update(subscriptionRecordId, {state:{status: 'online',name: $currentUser.name}});
         });      
-        pb.collection('lobby').subscribe('*', function (e) {
+        listeners.userstate = pb.collection('userstate').subscribe('*', function (e) {
             getAllUsersInLobby();
         });
         getAllUsersInLobby();
-        currentUser.subscribe(async (user: any) => {
+        listeners.currentUser = currentUser.subscribe(async (user: any) => {
             if (user) {
                 setUserStatus();
             } else {
                 if (subscriptionRecordId) {
-                    const result = await pb.collection('lobby').delete(subscriptionRecordId);
+                    const result = await pb.collection('userstate').delete(subscriptionRecordId);
                 }
             }
         });
+        return () => {
+            document.removeEventListener("visibilitychange", listeners.visibilityListener);
+            window.removeEventListener('blur', listeners.blur);
+            window.removeEventListener('focus', listeners.focus);
+            listeners.userstate.unsubscribe();
+            listeners.currentUser.unsubscribe();
+        };
     });
     const setUserStatus = async () => {
         if (!$currentUser) {
@@ -42,15 +49,15 @@
             return;
         }
         try {
-            const resultList = await pb.collection('lobby').getFirstListItem(`user="${$currentUser.id}"`, {});
+            const resultList = await pb.collection('userstate').getFirstListItem(`user="${$currentUser.id}"`, {});
             if (resultList) {
                 subscriptionRecordId = resultList.id;
-                const result = await pb.collection('lobby').update(subscriptionRecordId, {entered:(new Date().toISOString()),state:{status: 'online',name: $currentUser.name}});
+                const result = await pb.collection('userstate').update(subscriptionRecordId, {entered:(new Date().toISOString()),state:{status: 'online',name: $currentUser.name}});
                 return;
             }
         } catch (error) {
         }
-        const result = await pb.collection('lobby').create({
+        const result = await pb.collection('userstate').create({
             user: $currentUser.id,
             state: {entered: (+new Date()), 
                     name: $currentUser.name, 
@@ -63,10 +70,10 @@
         // console.log('ionViewWillEnter event fired');
     }
     const ionViewWillLeave = async () => {
-        const result = await pb.collection('lobby').delete(subscriptionRecordId);
+        const result = await pb.collection('userstate').delete(subscriptionRecordId);
     }
     const getAllUsersInLobby = async () => {
-        const records = await pb.collection('lobby').getFullList({
+        const records = await pb.collection('userstate').getFullList({
             sort: '-created',
         });
         usersInLobby = records;

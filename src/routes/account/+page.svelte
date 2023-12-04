@@ -1,21 +1,63 @@
 <script lang="ts">
 	import IonPage from "$ionpage";
-	import { personOutline } from "ionicons/icons"
-    import { pb, currentUser } from '$services/backend.service'
+	import { imageOutline, personOutline } from "ionicons/icons"
+    import { pb, currentUser, apiURL } from '$services/backend.service'
+	import { onMount } from "svelte"
     let name = '';
     const handleNameChange = async (event: any) => {
-        console.log('handleNameChange', event.target.value!)
 		name = event.target.value!
-        console.log('name', name)
-        if (!$currentUser) {
-            console.log('*** no currentUser -- aborting handleNameChange() ***');
+        if ($currentUser) {
+            pb.collection('users').update($currentUser.id, {
+                name: name,
+            });
+        } else {
+            console.log('*** no currentUser -- aborting name change ***');
             return;
         }
-        pb.collection('users').update($currentUser.id, {
-            name: name,
-        });
 	}
 
+    onMount(async () => {
+        if ($currentUser) {
+            name = $currentUser.name;
+        }
+
+        const fileInput: any = document.getElementById('fileInput');
+        if (fileInput) {
+            console.log('*** fileInput found ***', fileInput)
+            // listen to file input changes and add the selected files to the form data
+            fileInput.addEventListener('change', async function () {
+
+                const formData = new FormData();
+                /*
+                const updateData = new FormData();
+                updateData.append("about", about);
+                updateData.append("avatar", avatar); // must be File or Blob
+                await locals.pb.collection('users').update(locals.user.id, updateData);                
+                */                
+
+                console.log('*** fileInput change ***', fileInput.files);
+                for (let file of fileInput.files) {
+                    console.log('*** file', file);
+                    formData.append('avatar', file);
+                }
+
+                // upload and create new record
+                // const createdRecord = await pb.collection('example').create(formData);
+                console.log('*** formData', formData, formData.entries.length)
+                try {
+                    const result = await pb.collection('users').update($currentUser.id, formData);
+                    console.log('file upload result', result);
+                } catch (error) {
+                    console.error('Error uploading file:', error);
+                }
+
+            });
+
+        } else {
+            console.log('*** fileInput not found ***')
+        }
+
+    });
 
 </script>
 <IonPage>
@@ -60,6 +102,29 @@
                 </ion-item>
             </ion-col>
         </ion-row>
+
+        <ion-row>
+            <ion-col>
+                <ion-label>Avatar/Image</ion-label>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-item class="loginItem" lines="none">
+                    <input type="file" id="fileInput" />
+                    <ion-icon
+                        class="inputIcon"
+                        icon={imageOutline}
+                        slot="start"
+                        size="large"
+                        color="medium"
+                    />
+                    <ion-img src={`${apiURL}/api/files/users/${$currentUser.id}/${$currentUser.avatar}?thumb=150x150`}></ion-img>
+
+                </ion-item>
+            </ion-col>
+        </ion-row>
+
     </ion-grid>
 
 
