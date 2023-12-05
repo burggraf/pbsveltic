@@ -47,13 +47,6 @@ export const signUpWithEmail = async (email: string, password: string) => {
   // TODO: this is not working
   export const sendMagicLink = async (email: string) => {
     toast('Magic link not implemented yet')
-    // const { data, error } = await supabase.auth.signInWithOtp({
-    //   email: email,
-    //   options: {
-    //     emailRedirectTo: window.location.origin
-    //   }
-    // });
-    // return { user: data.user, session: data.session, error };
   }
   
   export const signInWithEmail = async (email: string, password: string) => {

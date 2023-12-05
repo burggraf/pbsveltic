@@ -2,11 +2,10 @@
 	import { signUpWithEmail, sendMagicLink, signInWithEmail, resetPassword } from './LoginModal'
 	import { modalController } from '$ionic/svelte'
 	import LoginProviderSignInButton from './LoginProviderSignInButton.svelte'
-	import type { Provider } from '@supabase/supabase-js'
 	import { showAlert } from '$services/alert.service'
 	import { toast } from '$services/toast'
 	import { loadingBox } from '$services/loadingMessage'
-	export let providers: Provider[] = []
+	export let providers: string[] = []
 	export let onSignIn: Function = () => {}
 
 	import {
@@ -113,7 +112,7 @@
 
 	const signUp = async () => {
 		const loader = await loadingBox('Signing you up...')
-		const { user, error } = await signUpWithEmail(email, password, name)
+		const { user, error } = await signUpWithEmail(email, password) // , name)
 		if (user) {
 			loader.dismiss()
 			showModal = false

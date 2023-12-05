@@ -1,6 +1,5 @@
 <script lang="ts">
 import { signInWithProvider } from './LoginProviderSignInButton';
-import type { Provider } from "@supabase/supabase-js";
 import { toast } from '$services/toast';
 import { loadingBox } from "$services/loadingMessage";
 export let name: Provider;
@@ -64,11 +63,11 @@ import {
 //   console.log('*** name', name);
 //   console.log('*** hasSpecialIcon', hasSpecialIcon);
 
-    const doSignInWithProvider = async (provider: Provider) => {
+    const doSignInWithProvider = async (provider: string) => {
         const loader = await loadingBox(`Contacting ${provider}...`);
 
         const { /*user, session,*/ error } = 
-        await signInWithProvider(provider as Provider);
+        await signInWithProvider(provider);
         if (error) {
             loader.dismiss();
             toast(error.message);

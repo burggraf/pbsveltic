@@ -3,9 +3,8 @@
 	import { modalController } from '$ionic/svelte'
 	import { currentUser } from '$services/backend.service'
 	import { signOut } from './Login';
-	import type { Provider } from '@supabase/supabase-js'
 	export let profileFunction: Function = () => {}
-	export let providers: Provider[] = []
+	export let providers: string[] = []
 	export let onSignIn: Function = () => {}
 	export let onSignOut: Function = () => {}
 	const defaultButtonProps: any = {

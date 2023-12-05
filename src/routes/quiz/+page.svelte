@@ -19,6 +19,11 @@
     const ionViewDidEnter = async () => {
         await getScore();
     }
+    currentUser.subscribe(async (user: any) => {
+        if (user) {
+            await getScore();
+        }
+    });
     const getScore = async () => {
         if (!$currentUser) {
             console.log('*** no currentUser -- aborting getScore() ***');

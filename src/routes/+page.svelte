@@ -3,17 +3,16 @@
 
 	import { currentUser } from '$services/backend.service';
 	import { goto } from '$app/navigation';
-	import * as allIonicIcons from 'ionicons/icons';
+	// import * as allIonicIcons from 'ionicons/icons';
 	import LoginModal from '$components/LoginModal.svelte';
 	import { modalController } from '$ionic/svelte';
-	import type { Provider } from '@supabase/supabase-js';
-	import { supabase } from '$services/supabase.service';
-	import { page } from '$app/stores';
+	// import { page } from '$app/stores';
 	import { onMount } from 'svelte'
 	import { currentState } from "$services/state.service";
 
-	export let providers: Provider[] = [];
-	export let onSignIn: Function = () => {};
+	//export let providers: Provider[] = [];
+	export const providers: string[] = [];
+	export const onSignIn: Function = () => {};
 
 	const app_version = __APP_VERSION__;
 	const app_name = __APP_NAME__;
@@ -29,7 +28,7 @@
 		const openLoginModalController = await modalController.create({
 			component: LoginModal,
 			componentProps: {
-				providers: providers,
+				providers: ['google', 'facebook'],
 				onSignIn: () => { goto('/welcome') },
 			},
 			showBackdrop: true,
