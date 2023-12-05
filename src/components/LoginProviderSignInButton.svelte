@@ -2,7 +2,7 @@
 import { signInWithProvider } from './LoginProviderSignInButton';
 import { toast } from '$services/toast';
 import { loadingBox } from "$services/loadingMessage";
-export let name: Provider;
+export let name: string;
 
 const logoColors: any = {
     "google": "rgb(227,44,41)",
@@ -64,15 +64,20 @@ import {
 //   console.log('*** hasSpecialIcon', hasSpecialIcon);
 
     const doSignInWithProvider = async (provider: string) => {
-        const loader = await loadingBox(`Contacting ${provider}...`);
+        // const loader = await loadingBox(`Contacting ${provider}...`);
 
-        const { /*user, session,*/ error } = 
-        await signInWithProvider(provider);
-        if (error) {
-            loader.dismiss();
-            toast(error.message);
-        } else {
-            loader.dismiss();
+        try {
+            const result = await signInWithProvider(provider);
+            console.log('*** signInWithProvider result', result);
+            // loader.dismiss();
+        } catch (error: any) {
+            if (error) {
+                // loader.dismiss();
+                toast(error.message);
+            } else {
+                // loader.dismiss();
+            }
+
         }
     }
 </script>    

@@ -5,6 +5,7 @@
 	import { showAlert } from '$services/alert.service'
 	import { toast } from '$services/toast'
 	import { loadingBox } from '$services/loadingMessage'
+	import { currentUser } from '$services/backend.service'
 	export let providers: string[] = []
 	export let onSignIn: Function = () => {}
 
@@ -37,6 +38,12 @@
 		zoom: 'rgb(45,140,255)',
 		notion: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'gray' : 'black',
 	}
+	currentUser.subscribe((user: any) => {
+		if (user) {
+			showModal = false
+			modalController.dismiss({ data: Date.now() })
+		}
+	})
 	let showModal = false
 	const closeOverlay = () => {
 		modalController.dismiss({ data: Date.now() })
@@ -101,6 +108,7 @@
 				toast(error.message, 'danger', 5000)
 			}
 		} else {
+			// successful email login
 			loader.dismiss()
 			showModal = false
 			modalController.dismiss({ data: Date.now() })
