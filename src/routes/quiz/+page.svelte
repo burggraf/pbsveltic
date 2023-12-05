@@ -124,11 +124,12 @@
         {:else}
         <ion-card>
             <ion-card-header>
-              <ion-card-title>Loading...</ion-card-title>
+              <ion-card-title>Loading question...</ion-card-title>
             </ion-card-header>
+            <ion-card-subtitle style="padding-left: 30px;">monkeys returning to typewriters in 1...2...</ion-card-subtitle>
              
-                <ion-card-content>
-                 <ion-spinner name="crescent" />
+                <ion-card-content class="ion-text-center">
+                 <ion-spinner />
                 </ion-card-content>
         </ion-card>
         {/if}
