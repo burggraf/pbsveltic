@@ -26,6 +26,9 @@ console.log(`${protocol}//${host}:${port}`)
 export let apiURL = `${protocol}//${host}`;
 if (port) apiURL += `:${port}`;
 apiURL += '/';
+if (host !== 'localhost' && host !== '127.0.0.1') {
+  apiURL = 'https://pbsveltic.pockethost.io/';
+}
 console.log('******* backend.service.ts: apiURL', apiURL);
 console.log('********************************')
 export const pb = new PocketBase(apiURL);
