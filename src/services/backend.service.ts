@@ -23,9 +23,12 @@ console.log('******* backend.service.ts: host', host);
 console.log('******* backend.service.ts: port', port);
 console.log('******* backend.service.ts: protocol', protocol);
 console.log(`${protocol}//${host}:${port}`)
+export let apiURL = `${protocol}//${host}`;
+if (port) apiURL += `:${port}`;
+apiURL += '/';
+console.log('******* backend.service.ts: apiURL', apiURL);
 console.log('********************************')
-export let apiURL = `${protocol}//${host}:${port}`;
-export const pb = new PocketBase(`${protocol}//${host}:${port}`);
+export const pb = new PocketBase(apiURL);
 //export const pb = new PocketBase('http://west.ovh.dmarie.com');
 
 export let currentUser: any = writable<any | null>(null);
