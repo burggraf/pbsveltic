@@ -17,7 +17,7 @@
         await getQuestion();
     });
     const ionViewDidEnter = async () => {
-        await getScore();
+        // await getScore();
     }
     const getScore = async () => {
         if (!$currentUser) {
@@ -37,6 +37,9 @@
         }
     }
     currentUser.subscribe(async (user: any) => {
+        if (user?.id === $currentUser?.id && total > 0) {
+            return; // no need to keep loading the score when this fires multiple times
+        }
         if (user) {
             await getScore();
         }

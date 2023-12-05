@@ -124,7 +124,7 @@
 						<div class="container">
 							{#if $currentUser.avatar}
 								<ion-img
-									src={`${apiURL}/api/files/users/${$currentUser.id}/${$currentUser.avatar}?thumb=150x150`}
+									src={`${apiURL}api/files/users/${$currentUser.id}/${$currentUser.avatar}?thumb=150x150`}
 								/>
 							{:else}
 								<ion-button fill="clear" size="large" on:click={upload}
