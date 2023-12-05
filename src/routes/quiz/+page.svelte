@@ -21,19 +21,16 @@
     }
     const getScore = async () => {
         if (!$currentUser) {
-            console.log('*** no currentUser -- aborting getScore() ***');
             return;
         }
         try {
             const record = await pb.collection('trivia_log_score').getFirstListItem(`id="${$currentUser.id}"`, {});
             if (record) {
-                console.log('*** getScore() record', record);
                 correct = record.correct;
                 total = record.total;
             }
         } catch (error) {
             // no data, probably
-            console.log('*** getScore() error', error);
         }
     }
     currentUser.subscribe(async (user: any) => {
@@ -46,7 +43,6 @@
     });
     const logQuestion = async (letter: string) => {
         if (!$currentUser) {
-            console.log('*** no currentUser -- aborting logQuestion() ***');
             return;
         }
         pb.collection('trivia_log').create({

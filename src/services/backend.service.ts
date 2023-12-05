@@ -18,32 +18,22 @@ let port = window.location.port;
 if (host === 'localhost' || host === '127.0.0.1') port = '8090';
 // get current protocol (http or https)
 const protocol = window.location.protocol;
-console.log('********************************')
-console.log('******* backend.service.ts: host', host);
-console.log('******* backend.service.ts: port', port);
-console.log('******* backend.service.ts: protocol', protocol);
-console.log(`${protocol}//${host}:${port}`)
 export let apiURL = `${protocol}//${host}`;
 if (port) apiURL += `:${port}`;
 apiURL += '/';
 if (host !== 'localhost' && host !== '127.0.0.1') {
   apiURL = 'https://pbsveltic.pockethost.io/';
 }
-console.log('******* backend.service.ts: apiURL', apiURL);
-console.log('********************************')
 export const pb = new PocketBase(apiURL);
 //export const pb = new PocketBase('http://west.ovh.dmarie.com');
 
 export let currentUser: any = writable<any | null>(null);
 
 const removeListener1 = pb.authStore.onChange((token, model) => {
-  console.log('********* authStore changed:', token, model)
   currentUser.set(model);
 });
 
 export const loadUser = async () => {
-    console.log('loadUser()')
-    console.log('pb.authStore.model', pb.authStore.model)
   // get all keys from localStorage
   if (pb.authStore.model) {
     currentUser.set(pb.authStore.model);

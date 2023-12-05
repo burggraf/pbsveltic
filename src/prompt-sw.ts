@@ -5,6 +5,9 @@
 import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from 'workbox-precaching'
 import { NavigationRoute, registerRoute } from 'workbox-routing'
 
+// get rid of annoying workbox logs in console
+self.__WB_DISABLE_DEV_LOGS = true
+
 declare let self: ServiceWorkerGlobalScope
 
 self.addEventListener('message', (event) => {
