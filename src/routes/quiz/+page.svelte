@@ -103,6 +103,7 @@
     </ion-header>
     <ion-content class="ion-padding">
 
+        {#if question.id}
         <ion-card>
             <ion-card-header>
               <ion-card-title>{question.category}</ion-card-title>
@@ -120,6 +121,17 @@
             <ion-button class="item-text-wrap" id="item-3" fill="clear" on:click={selectAnswer(question.answerMap[3])}>{question[question.answerMap[3]]}</ion-button>
             </div>
         </ion-card>
+        {:else}
+        <ion-card>
+            <ion-card-header>
+              <ion-card-title>Loading...</ion-card-title>
+            </ion-card-header>
+             
+                <ion-card-content>
+                 <ion-spinner name="crescent" />
+                </ion-card-content>
+        </ion-card>
+        {/if}
 
     </ion-content>
     <ion-footer>
@@ -133,4 +145,9 @@
         </ion-toolbar>
     </ion-footer>
 </IonPage>
-<style></style>
+<style>
+  ion-spinner {
+    width: 100px;
+    height: 100px;
+  }    
+</style>
