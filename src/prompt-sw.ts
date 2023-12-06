@@ -25,9 +25,15 @@ let allowlist: undefined | RegExp[]
 if (import.meta.env.DEV)
   allowlist = [/^\/$/]
 
+  const adminPathRegExp = new RegExp('^\/_\/.*');
+
 // to allow work offline
 registerRoute(new NavigationRoute(
   createHandlerBoundToURL('/'),
-  { allowlist },
-))
+  // { allowlist, denylist:  [new RegExp('/api/')], },
+  { allowlist, denylist:  [  /(_|api)(\/.*)?$/  ] },
+
+
+  // [  /(_|api)(\/.*)?$/  ]
+  ))
 
